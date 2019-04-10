@@ -19,7 +19,8 @@ const ROUTES =
         ROOT: "/posts",
         NUEVO: "/posts/nuevo",
         USUARIO: "/posts/usuario",
-        COMENTAR: "/posts/comentar"
+        COMENTAR: "/posts/comentar",
+        COMENTAR_COMENTARIO: "/posts/comentar/comentario"
     }
 
 }

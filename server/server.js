@@ -13,7 +13,7 @@ const port = process.env.port || 5000;
 let db = null;
 let arr = [];
 
-const { USUARIO, POST, COMENTARIO } = require("./models")
+const { USUARIO, POST, COMENTARIO, COMENTARIO_COMENTARIO } = require("./models")
 const { ROUTES, COLLECTIONS } = require("./const");
 
 client.connect(function (err) {
@@ -99,6 +99,14 @@ client.connect(function (err) {
             res.send(result)
         })
     });
+    
+    app.get(ROUTES.POST.COMENTAR_COMENTARIO, (req, res) => {
+        let AUX = {...COMENTARIO_COMENTARIO}
+        AUX = req.query;
+        COMENTARIO_COMENTAR(AUX, db, result => {
+            res.send(result)
+        })
+    });
 
 
 
@@ -116,7 +124,8 @@ client.connect(function (err) {
     //     console.log(result)
     // })
     // const mongo_id = new mongo.ObjectID("5cae00359137cb5124c3694a")
-    // collectionPOST.update({ "_id": mongo_id }).toArray((err, result) => console.log(result))
+    // collectionPOST.find({ "_id": mongo_id }).toArray((err, result) => console.log(result))
+    
 
 });
 
@@ -146,12 +155,41 @@ const POST_COMENTAR = (object, db, callback) => {
     const mongo_id = new mongo.ObjectID(object._id)
     collection.find({ "_id": mongo_id }).toArray((err, result) => {
         let comentarios = result[0].comentarios;
-        comentarios.push({usuario: object.usuario, comentario: object.comentario, comentarios: []});
+        comentarios.push({usuario: object.usuario, comentario: object.comentario, fecha: + new Date() ,comentarios: []});
         collection.updateOne({"_id": mongo_id}, {$set: {comentarios: comentarios}}, (result) => {
             callback({...result, error: false})
         })
     })
 
+}
+
+const COMENTARIO_COMENTAR = (object, db, callback) => {
+    //_id, to, from, fecha, comentario,
+    // console.log("OBJETO: ", object)
+    const collection = db.collection(COLLECTIONS.POSTS);    
+    const respuesta = {usuario: object.from, comentario: object.comentario, fecha: + new Date()};
+    const mongo_id = new mongo.ObjectID(object._id);
+    //BUSCANDO EL POST
+    collection.find({"_id": mongo_id}).toArray((err, result) => {
+        let postActual = result[0];
+        let comentarios = postActual.comentarios;
+        for(let i = 0; i < comentarios.length; i++)
+        {
+            console.log(`${comentarios[i].usuario} == ${object.to}`)
+            console.log(`${comentarios[i].fecha} == ${object.fecha}`)
+            if(comentarios[i].usuario == object.to && comentarios[i].fecha == object.fecha)
+            {
+                //AQUI EL COMENTARIO A COMENTAR HA SIDO ENCONTRADO
+                comentarios[i].comentarios.push(respuesta);
+                break;
+            }
+        }
+
+        // comentarios.push(respuesta);
+        collection.updateOne({"_id": mongo_id}, {$set: {comentarios: comentarios}}, (result) => {
+            callback({...result, error: false});
+        })
+    })
 }
 
 

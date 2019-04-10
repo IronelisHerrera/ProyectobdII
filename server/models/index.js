@@ -20,7 +20,17 @@ const COMENTARIO =
     _id: "", //ID DEL POST
     usuario:"",
     comentario:"",
+    fecha: "",
     comentarios: []
 }
 
-module.exports = { USUARIO, POST, COMENTARIO };
+const COMENTARIO_COMENTARIO =
+{
+    _id: "",
+    to:"",
+    from:"",
+    fecha:"",
+    comentario:""
+}
+
+module.exports = { USUARIO, POST, COMENTARIO, COMENTARIO_COMENTARIO };
