@@ -8,7 +8,7 @@ import auth from './../auth/auth-helper'
 import PostList from './PostList'
 import { listNewsFeed } from './api-post.js'
 import NewPost from './NewPost'
-
+import { ROUTES } from "../const"
 const styles = theme => ({
   card: {
     margin: 'auto',
@@ -25,23 +25,11 @@ const styles = theme => ({
   }
 })
 class Newsfeed extends Component {
-  state = {
-    posts: []
-  }
-  loadPosts = () => {
 
-  }
-  componentDidMount = () => {
-    this.loadPosts()
-  }
-  addPost = (post) => {
-
-  }
-  removePost = (post) => {
-
-  }
   render() {
-    const { classes, isUserLogged } = this.props
+    const { classes, isUserLogged, posts } = this.props
+    
+    console.log("POSTS: ", posts)
     if (isUserLogged) {
       return (
         <Card className={classes.card}>
@@ -51,7 +39,7 @@ class Newsfeed extends Component {
           <Divider />
           <NewPost addUpdate={this.addPost} />
           <Divider />
-          <PostList removeUpdate={this.removePost} posts={this.state.posts} />
+          <PostList removeUpdate={this.removePost} posts={posts} />
         </Card>
       )
     }

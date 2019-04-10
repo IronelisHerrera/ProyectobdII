@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import auth from './../auth/auth-helper'
-import { CardHeader } from '@material-ui/core/Card'
+import { CardHeader } from '@material-ui/core'
 import TextField from '@material-ui/core/TextField'
 import Avatar from '@material-ui/core/Avatar'
 import Icon from '@material-ui/core/Icon'
@@ -94,9 +94,9 @@ class Comments extends Component {
 
     return (<div>
         <CardHeader
-              avatar={
-                <Avatar className={classes.smallAvatar} src={'/api/users/photo/'+auth.isAuthenticated().user._id}/>
-              }
+              // avatar={
+              //   <Avatar className={classes.smallAvatar} src={'/api/users/photo/'+auth.isAuthenticated().user._id}/>
+              // }
               title={ <TextField
                 onKeyDown={this.addComment}
                 multiline
@@ -108,7 +108,7 @@ class Comments extends Component {
                 />}
               className={classes.cardHeader}
         />
-        { this.props.comments.map((item, i) => {
+        {/* { this.props.comments.map((item, i) => {
             return <CardHeader
                       avatar={
                         <Avatar className={classes.smallAvatar} src={'/api/users/photo/'+item.postedBy._id}/>
@@ -117,7 +117,7 @@ class Comments extends Component {
                       className={classes.cardHeader}
                       key={i}/>
               })
-        }
+        } */}
     </div>)
   }
 }

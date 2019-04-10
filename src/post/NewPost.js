@@ -61,6 +61,9 @@ class NewPost extends Component {
       if(!res.ok)
       {
         alert("Ha ocurrido un error haciendo el post");
+      } else
+      {
+        this.setState({texto: ""});
       }
     })
     .catch(err => {
@@ -72,14 +75,14 @@ class NewPost extends Component {
   requestSendPost = async() =>
   {
     const { texto } = this.state;
-    const correo = window.localStorage.getItem("correo");
-    // descripcion: "",
-    // correo: ""
+    const correo = window.localStorage.getItem("correo");    
     const res = await fetch(`${ROUTES.POST.NUEVO}?descripcion=${texto}&correo=${correo}&fecha=${+ new Date()}`);
     const body = res.json()
     if(res.status != 200) throw Error(body.message)
     return body;
   }
+
+  
 
 
   handleChange = event => {
