@@ -27,7 +27,7 @@ const styles = theme => ({
 class Newsfeed extends Component {
 
   render() {
-    const { classes, isUserLogged, posts } = this.props
+    const { classes, isUserLogged, posts, updatePosts } = this.props
     
     console.log("POSTS: ", posts)
     if (isUserLogged) {
@@ -37,7 +37,7 @@ class Newsfeed extends Component {
             Blablabla
           </Typography>
           <Divider />
-          <NewPost addUpdate={this.addPost} />
+          <NewPost updatePosts={updatePosts} />
           <Divider />
           <PostList removeUpdate={this.removePost} posts={posts} />
         </Card>

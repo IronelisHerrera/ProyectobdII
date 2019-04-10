@@ -1,7 +1,9 @@
 const express = require("express");
 const app = express();
-const MongoClient = require('mongodb').MongoClient;
+const mongo = require('mongodb')
+const MongoClient = mongo.MongoClient
 const assert = require('assert');
+// const mongo = require("mongodb")
 
 const url = 'mongodb://localhost:27018';
 const client = new MongoClient(url);
@@ -99,7 +101,11 @@ client.connect(function (err) {
     })
 
     // collectionUsuario.find
-
+    const mongo_id = new mongo.ObjectID("5cad9e028e668e4efe99abb1")
+    collectionPOST.find({"_id": mongo_id}).toArray((err, result) => console.log(result))
+    // collectionPOST.findOne({"_id": mongo_id}, (err, result) => {
+    //     console.log(result)
+    // })
 
 });
 
@@ -122,6 +128,11 @@ const POST_NUEVO = (object, db, callback) => {
     collection.insertOne(object, (err, result) => {
         callback(result);
     })
+}
+
+const POST_COMENTAR = (object, db, callback) => {
+    const collection = db.collection(COLLECTIONS.POSTS);
+    
 }
 
 

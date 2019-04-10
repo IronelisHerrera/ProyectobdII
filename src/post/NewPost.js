@@ -64,6 +64,7 @@ class NewPost extends Component {
       } else
       {
         this.setState({texto: ""});
+        this.props.updatePosts();
       }
     })
     .catch(err => {

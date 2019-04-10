@@ -75,7 +75,7 @@ class MainRouter extends Component {
       <Switch>
         {/* <Route exact path="/" component={() => <Home isUserLogged={isUserLogged}/> }/> */}
         <Route path="/signup" component={Signup}/>
-        <Route path="/home" component={() => <Home isUserLogged={isUserLogged} posts={posts} />}/>
+        <Route path="/home" component={() => <Home isUserLogged={isUserLogged} posts={posts} updatePosts={this.GetPosts} />}/>
         <Route path="/signin" component={(props) => <Signin {...props} OnChangeStateCorreo={this.OnChangeStateCorreo} /> }/>
       </Switch>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"/>

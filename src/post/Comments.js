@@ -102,7 +102,7 @@ class Comments extends Component {
                 multiline
                 value={this.state.text}
                 onChange={this.handleChange('text')}
-                placeholder="Write something ..."
+                placeholder="Escribe un comentario"
                 className={classes.commentField}
                 margin="normal"
                 />}

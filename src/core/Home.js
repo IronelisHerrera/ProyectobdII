@@ -34,14 +34,14 @@ class Home extends Component {
   }
 
   render() {
-    const { classes, isUserLogged, posts } = this.props
+    const { classes, isUserLogged, posts, updatePosts } = this.props
     return (
       <div className={classes.root}>
         <Grid spacing={24}>
           <Grid xs={12}  >
             <Grid container justify="center">
               <Grid item xs={8} sm={7}>
-                <Newsfeed isUserLogged={isUserLogged} posts={posts} />
+                <Newsfeed isUserLogged={isUserLogged} posts={posts} updatePosts={updatePosts} />
               </Grid>
             </Grid>
           </Grid>
