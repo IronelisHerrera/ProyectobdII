@@ -39,7 +39,7 @@ class Newsfeed extends Component {
           <Divider />
           <NewPost updatePosts={updatePosts} />
           <Divider />
-          <PostList removeUpdate={this.removePost} posts={posts} />
+          <PostList posts={posts} updatePosts={updatePosts} />
         </Card>
       )
     }

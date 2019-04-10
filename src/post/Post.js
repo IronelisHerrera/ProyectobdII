@@ -11,8 +11,6 @@ import {Typography, Card, CardHeader, CardContent, CardActions, Avatar } from '@
 import Divider from '@material-ui/core/Divider'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
-import { Link } from 'react-router-dom'
-import { remove, like, unlike } from './api-post.js'
 import Comments from './Comments'
 import DefaultPhoto from "../assets/images/user.svg"
 
@@ -56,49 +54,22 @@ class Post extends Component {
 
   
   checkLike = (likes) => {
-    const jwt = auth.isAuthenticated()
-    let match = likes.indexOf(jwt.user._id) !== -1
-    return match
+    
   }
 
   like = () => {
-    let callApi = this.state.like ? unlike : like
-    const jwt = auth.isAuthenticated()
-    callApi({
-      userId: jwt.user._id
-    }, {
-        t: jwt.token
-      }, this.props.post._id).then((data) => {
-        if (data.error) {
-          console.log(data.error)
-        } else {
-          this.setState({ like: !this.state.like, likes: data.likes.length })
-        }
-      })
+    
   }
 
   updateComments = (comments) => {
-    this.setState({ comments: comments })
+    
   }
 
   deletePost = () => {
-    const jwt = auth.isAuthenticated()
-    remove({
-      postId: this.props.post._id
-    }, {
-        t: jwt.token
-      }).then((data) => {
-        if (data.error) {
-          console.log(data.error)
-        } else {
-          this.props.onRemove(this.props.post)
-        }
-      })
+    
   }
   render() {
-    const { classes } = this.props
-    console.log(this.props.post)
-    console.log(this.props.post.descripcion)
+    const { classes, post, updatePosts } = this.props    
     return (
       <Card className={classes.card}>
         <CardHeader
@@ -121,7 +92,7 @@ class Post extends Component {
           </IconButton> <span>{this.state.comments.length}</span>
         </CardActions> */}
         <Divider />
-        <Comments comentarios={this.props.post.comentarios}  />
+        <Comments post={post} updatePosts={updatePosts} comentarios={post.comentarios}  />
       </Card>
     )
   }

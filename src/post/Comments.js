@@ -1,13 +1,11 @@
 import React, { Component } from 'react'
-import auth from './../auth/auth-helper'
 import { CardHeader, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core'
 import TextField from '@material-ui/core/TextField'
 import Avatar from '@material-ui/core/Avatar'
-import Icon from '@material-ui/core/Icon'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
-import { comment, uncomment } from './api-post.js'
 import DefaultPhoto from "../assets/images/user.svg"
+import { ROUTES } from "../const"
 
 const styles = theme => ({
   cardHeader: {
@@ -46,53 +44,52 @@ class Comments extends Component {
   addComment = (event) => {
     if (event.keyCode == 13 && event.target.value) {
       event.preventDefault()
-
+      this.requestAddComment()
+      .then(res => {
+        //Actualizar comentarios
+        this.props.updatePosts();
+      })
+      .catch(err => {
+        console.log(err);
+        alert("Ha ocurrido un error agregando el comentario");
+      })
     }
   }
 
+  requestAddComment = async() =>
+  {
+    const { text } = this.state;
+    const { post } = this.props;
+    const usuarioActual = window.localStorage.getItem("usuario");
+    const res = await fetch(`${ROUTES.POST.COMENTAR}?_id=${post._id}&usuario=${usuarioActual}&comentario=${text}`)
+    const body = res.json();
+    if(res.status != 200) throw Error(body.message)
+    return body;
+  }
+
+  
+
   deleteComment = comment => event => {
-    const jwt = auth.isAuthenticated()
-    uncomment({
-      userId: jwt.user._id
-    }, {
-        t: jwt.token
-      }, this.props.postId, comment).then((data) => {
-        if (data.error) {
-          console.log(data.error)
-        } else {
-          this.props.updateComments(data.comments)
-        }
-      })
+   
   }
   render() {
-    const { classes } = this.props
+    const { classes, updatePosts } = this.props
     const commentBody = item => {
       return (
         <ListItem>
           <ListItemAvatar>
             <Avatar src={DefaultPhoto} />
           </ListItemAvatar>
-          <ListItemText primary={item.usuario} secondary={item.comentario}/>
+          <ListItemText primary={item.usuario} secondary={item.comentario} />
         </ListItem>
       )
-      // return (
-      //   <p className={classes.commentText}>
-          
-      //     <span>{item.usuario}</span>
-      //     <br />
-      //     {item.comentario}
-      //     <span className={classes.commentDate}>
-            
-      //     </span>
-      //   </p>
-      // )
     }
 
     return (<div>
       <CardHeader
-        // avatar={
-        //   <Avatar className={classes.smallAvatar} src={'/api/users/photo/'+auth.isAuthenticated().user._id}/>
-        // }
+        avatar={
+          <Avatar className={classes.smallAvatar} src={DefaultPhoto} />
+        }
         title={<TextField
           onKeyDown={this.addComment}
           multiline

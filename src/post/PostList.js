@@ -5,10 +5,11 @@ import Post from './Post'
 
 class PostList extends Component {
   render() {
+    const { updatePosts, posts } = this.props;
     return (
       <div style={{marginTop: '24px'}}>
-        {this.props.posts.map((item, i) => {
-            return <Post post={item} key={i} onRemove={this.props.removeUpdate}/>
+        {posts.map((item, i) => {
+            return <Post post={item} key={i} updatePosts={updatePosts}/>
           })
         }
       </div>
