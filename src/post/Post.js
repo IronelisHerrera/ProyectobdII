@@ -12,6 +12,7 @@ import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import Comments from './Comments'
 import DefaultPhoto from "../assets/images/user.svg"
+import { isNull, isNullOrUndefined } from 'util';
 
 const styles = theme => ({
   card: {
@@ -48,7 +49,7 @@ class Post extends Component {
   state = {
     like: false,
     likes: 0,
-    comments: []
+    comments: [],    
   }
 
   
@@ -69,12 +70,14 @@ class Post extends Component {
   }
   render() {
     const { classes, post, updatePosts } = this.props;    
-    let ubicacion = null;
+    let ubicacion = "";
     console.log("POST: ", post)
-    if(post.ciudad)
+    if(post.ciudad != "null")
     {      
+      
+      console.log("ENTRA: ", post.ciudad)
       ubicacion = `${post.pais}, ${post.ciudad}`;
-    }
+    } 
 
     return (
       <Card className={classes.card}>
@@ -98,12 +101,7 @@ class Post extends Component {
           <Typography component="p" className={classes.text}>
             {this.props.post.descripcion}
           </Typography>          
-        </CardContent>
-        {/* <CardActions>
-          <IconButton className={classes.button} aria-label="Comment" color="secondary">
-            <CommentIcon />
-          </IconButton> <span>{this.state.comments.length}</span>
-        </CardActions> */}
+        </CardContent>        
         <Divider />
         <Comments post={post} updatePosts={updatePosts} comentarios={post.comentarios}  />
       </Card>

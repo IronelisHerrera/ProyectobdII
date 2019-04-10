@@ -54,6 +54,7 @@ class NewPost extends Component {
       ...UBICACION
     },
     switchUbicacion: false,
+    canPost: true,
   }
 
   componentDidMount = () => {
@@ -70,34 +71,39 @@ class NewPost extends Component {
 
   getUbicacion = () =>
   {
+    this.setState({canPost: false})
     this.requestUbicacion()
-    .then(res => this.setState({ubicacion: res}))
+    .then(res => this.setState({ubicacion: res, canPost: true}))
     .catch(err => console.log(err))
   }
 
   sendPost = () =>
   {
-    this.requestSendPost()
-    .then(res => {
-      if(!res.ok)
-      {
+    let { canPost } = this.state;
+    if(canPost)
+    {
+      this.requestSendPost()
+      .then(res => {
+        if(!res.ok)
+        {
+          alert("Ha ocurrido un error haciendo el post");
+        } else
+        {
+          this.setState({texto: ""});
+          this.props.updatePosts();
+        }
+      })
+      .catch(err => {
+        console.log(err);
         alert("Ha ocurrido un error haciendo el post");
-      } else
-      {
-        this.setState({texto: ""});
-        this.props.updatePosts();
-      }
-    })
-    .catch(err => {
-      console.log(err);
-      alert("Ha ocurrido un error haciendo el post");
-    })
+      })
+    }
   }
   
   requestSendPost = async() =>
   {
     const { texto, ubicacion } = this.state;
-    const correo = window.localStorage.getItem("correo");
+    const correo = window.localStorage.getItem("usuario");
     const res = await fetch(`${ROUTES.POST.NUEVO}?descripcion=${texto}&correo=${correo}&fecha=${+ new Date()}&ciudad=${ubicacion.city}&pais=${ubicacion.country}&lat=${ubicacion.lat}&lon=${ubicacion.lon}`);
     const body = res.json()
     if(res.status != 200) throw Error(body.message)
@@ -111,21 +117,22 @@ class NewPost extends Component {
 
   handleChangeSwitch = (event) =>
   {
-    let { switchUbicacion, ubicacion } = this.state;
+    let { switchUbicacion, ubicacion, canPost } = this.state;
     switchUbicacion = event.target.checked;
     if(switchUbicacion) {
       this.getUbicacion();
     } else
     {
       ubicacion = {...UBICACION}
+      canPost = true
     }
-    this.setState({switchUbicacion, ubicacion})
+    this.setState({switchUbicacion, ubicacion, canPost})
   }
 
 
   render() {
     const {classes} = this.props;
-    const { texto, ubicacion, switchUbicacion } = this.state;
+    const { texto, ubicacion, switchUbicacion, canPost } = this.state;
     console.log(ubicacion)
     return (<div className={classes.root}>
       <Card className={classes.card}>
@@ -151,7 +158,9 @@ class NewPost extends Component {
         />
 
         
-        <Button color="primary" variant="raised" disabled={this.state.text === ''} onClick={this.sendPost} className={classes.submit}>POST</Button>
+        <Button color="primary" variant="raised" disabled={this.state.text === ''} onClick={this.sendPost} className={classes.submit}>
+        {canPost?"POST":"CARGANDO"}
+        </Button>
       </CardActions>
     </Card>
   </div>)

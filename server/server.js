@@ -61,6 +61,9 @@ client.connect(function (err) {
             collection_usuarios.find({ correo: usuarioActual }).toArray((err, result) => {
                 // console.log(result[0].seguidos)
                 mis_amigos = [...result[0].seguidos];
+                console.log("USUARIO ACTUAL: ", usuarioActual)
+                console.log("USUARIO ACTUAL: ", result[0])
+                console.log("AMIGOS: ", mis_amigos)
                 if(result[0].seguidos.length != 0)
                 {
                     mis_amigos.forEach((item, i) => {
@@ -108,7 +111,15 @@ client.connect(function (err) {
         })
     });
 
-
+    app.get("/admin/borrar/posts", (req, res) => {
+        collectionPOST.remove({});
+        res.send({error: false})
+    })
+    
+    app.get("/admin/borrar/usuarios", (req, res) => {
+        collectionUsuario.remove({});
+        res.send({error: false})
+    })
 
 
     app.get("/", (req, res) => {
@@ -242,7 +253,7 @@ const USUARIOS_BUSCAR = (value, db, callback) => {
     let data = []
     collection.find({}).toArray((err, result) => {
         result.forEach(item => {
-            if (item.nombres.startsWith(value)) {
+            if (item.nombres.toLowerCase().startsWith(value.toLowerCase())) {
                 data.push(item);
             }
         })
@@ -253,6 +264,7 @@ const USUARIOS_BUSCAR = (value, db, callback) => {
 const USUARIOS_SEGUIR = (usuarioActual, usuarioAseguir, db, callback) => {
     const collection = db.collection(COLLECTIONS.USUARIOS);
     let usuario = {}
+    console.log(`FROM: ${usuarioActual}, TO: ${usuarioAseguir}`)
     collection.find({ correo: usuarioActual }).toArray((err, result) => {
         if (result.length > 0) {
             usuario = { ...result[0] };

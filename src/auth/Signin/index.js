@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
-import {Card, CardActions, CardContent, Button, TextField, Typography, Icon} from '@material-ui/core'
+import React, { Component } from 'react'
+import { Card, CardActions, CardContent, Button, TextField, Typography, Icon, FormControl } from '@material-ui/core'
 import PropTypes from 'prop-types'
-import {withStyles} from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
 import { ROUTES } from "../../const"
 
 const styles = theme => ({
@@ -32,46 +32,49 @@ const styles = theme => ({
 
 class Signin extends Component {
   state = {
-      email: '',
-      password: '',
-      error: '',      
+    email: '',
+    password: '',
+    error: '',
   }
- 
+
   clickSubmit = () => {
     let { email } = this.state;
+    console.log("EMAIL: ", email)
     this.requestLogin()
-    .then(res => {
-      if(res.length == 0)
-      {
-        alert("Usuario y/o contraseñas incorrectos");
-      } else
-      {
-        //Guardar el usuario logeado en el navegador
-        this.props.OnChangeStateCorreo(email, () => this.props.history.push("/home") );
-        window.localStorage.setItem("correo", email);        
-      }
-      console.log(res);
-    })
-    .catch(err => {
-      console.log(err);
-      alert("Ha ocurrido un error");
-    })
+      .then(res => {
+        if (res.length == 0) {
+          alert("Usuario y/o contraseñas incorrectos");
+        } else {
+          //Guardar el usuario logeado en el navegador
+
+          this.props.OnChangeStateCorreo(email, () => {
+            window.localStorage.setItem("usuario", email);
+            this.props.history.push("/home");
+          }
+          );
+        }
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+        alert("Ha ocurrido un error");
+      })
   }
 
   requestLogin = async () => {
     const { email, password } = this.state;
     const res = await fetch(`${ROUTES.SESION.LOGIN}?correo=${email}&clave=${password}`)
     const body = res.json();
-    if(res.status != 200) throw Error(body.message)
+    if (res.status != 200) throw Error(body.message)
     return body;
   }
 
   handleChange = name => event => {
-    this.setState({[name]: event.target.value})
+    this.setState({ [name]: event.target.value.toLowerCase() })
   }
 
   render() {
-    const {classes} = this.props    
+    const { classes } = this.props
 
     return (
       <Card className={classes.card}>
@@ -79,9 +82,11 @@ class Signin extends Component {
           <Typography type="headline" component="h2" className={classes.title}>
             Iniciar sesión
           </Typography>
-          <TextField id="email" type="email" label="Correo" className={classes.textField} value={this.state.email} onChange={this.handleChange('email')} margin="normal"/><br/>
-          <TextField id="password" type="password" label="Clave" className={classes.textField} value={this.state.password} onChange={this.handleChange('password')} margin="normal"/>
-          <br/> {
+          <FormControl autoSave={false}>
+            <TextField id="email" label="Correo" autoComplete='off' className={classes.textField} value={this.state.email} onChange={this.handleChange('email')} margin="normal" /><br />
+            <TextField id="password" type="password" label="Clave" autoComplete='off' className={classes.textField} value={this.state.password} onChange={this.handleChange('password')} margin="normal" />
+          </FormControl>
+          <br /> {
             this.state.error && (<Typography component="p" color="error">
               <Icon color="error" className={classes.error}>error</Icon>
               {this.state.error}

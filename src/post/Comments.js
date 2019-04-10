@@ -156,7 +156,7 @@ class Comments extends Component {
           <div style={{paddingLeft: 50}} >
             {item.comentarios.map((v, i) => {
               console.log("COMENTARIOS: ", v)
-              return <ListItem button onClick={() => this.OpenModalResponderComentario(v)} >
+              return <ListItem >
                 <ListItemAvatar>
                   <Avatar src={DefaultPhoto} />
                 </ListItemAvatar>

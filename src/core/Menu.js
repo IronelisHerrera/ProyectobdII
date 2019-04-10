@@ -102,23 +102,23 @@ const LinkMenu = (props) => {
 }
 
 const ModalUsuarios = (props) => {
-  const { data, open, closeModal, SeguirUsuario} = props;
-  
+  const { data, open, closeModal, SeguirUsuario } = props;
+
   return <Dialog open={open} onBackdropClick={closeModal} >
     <DialogTitle>
       Coincidencias
     </DialogTitle>
     <DialogContent>
-      
+
       <List>
         {data.map((item, i) => {
           return (
             <ListItem button onClick={() => SeguirUsuario(item)} >
               <ListItemAvatar>
-                <Avatar src={DefaultAvatar}/>
+                <Avatar src={DefaultAvatar} />
               </ListItemAvatar>
               {/* <Typography variant="subheading">Usuario de ejemplo</Typography> */}
-              <ListItemText primary={item.nombres}/>
+              <ListItemText primary={item.nombres} />
             </ListItem>
           )
         })}
@@ -133,73 +133,74 @@ const ModalUsuarios = (props) => {
 class Menu extends React.Component {
 
   state =
-  {
-    usuarios: [], modalOpen: false,
-    textoBuscar: ""
-  }
+    {
+      usuarios: [], modalOpen: false,
+      textoBuscar: ""
+    }
 
-  closeModal = () => this.setState({modalOpen: false});
+  closeModal = () => this.setState({ modalOpen: false });
 
-  handleBuscarText = (event) =>
-  {
+  handleBuscarText = (event) => {
     let { textoBuscar } = this.state;
     let value = event.target.value;
-    textoBuscar = value;    
-    this.setState({textoBuscar});
+    textoBuscar = value;
+    this.setState({ textoBuscar });
   }
 
-  handleBuscarKey = (event) =>
-  {
+  handleBuscarKey = (event) => {
     console.log(event.key)
-    if(event.key == "Enter")
-    {
+    if (event.key == "Enter") {
       this.getUsuarios();
       // this.setState({modalOpen: true})
     }
   }
 
-  requestUsuarios = async() =>
-  {
+  requestUsuarios = async () => {
     let { textoBuscar } = this.state;
     const res = await fetch(`${ROUTES.USUARIO.BUSCAR}?value=${textoBuscar}`);
     const body = res.json();
-    if(res.status != 200) throw Error(body.message)
+    if (res.status != 200) throw Error(body.message)
     return body;
   }
 
-  getUsuarios = () =>
-  {
+  getUsuarios = () => {
     this.requestUsuarios()
-    .then(res => this.setState({usuarios: res, modalOpen: true}))
-    .catch(err => {
-      console.log(err);
-      alert("Ha ocurrido un error solicitando los datos");
-    })
+      .then(res => this.setState({ usuarios: res, modalOpen: true }))
+      .catch(err => {
+        console.log(err);
+        alert("Ha ocurrido un error solicitando los datos");
+      })
   }
 
-  requestSeguirUsuario = async (usuarioAseguir) =>
-  {
+  requestSeguirUsuario = async (usuarioAseguir) => {
     const usuarioActual = window.localStorage.getItem("usuario");
+    // alert(usuarioActual)
     const res = await fetch(`${ROUTES.USUARIO.SEGUIR}?from=${usuarioActual}&to=${usuarioAseguir.correo}`)
     const body = res.json();
-    if(res.status != 200) throw Error(body.message)
+    if (res.status != 200) throw Error(body.message)
     return body;
   }
+  
+  SeguirUsuario = (usuarioAseguir) => {
+    const usuarioActual = window.localStorage.getItem("usuario");
+    if(usuarioActual != usuarioAseguir.correo)
+    {
+      this.requestSeguirUsuario(usuarioAseguir)
+        .then(res => {
+          console.log(res);
+          if (!res.error) {
+            alert("Has empezado a seguir este usuario");
+            this.props.GetPosts();
+          } else {
+            alert("Ya sigues al usuario")
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          alert("Ha ocurrido un error")
+        })
+    }
 
-  SeguirUsuario = (usuarioAseguir) =>
-  {
-    this.requestSeguirUsuario(usuarioAseguir)
-    .then(res => {
-      console.log(res);
-      if(!res.error)
-      {
-        alert("Has empezado a seguir este usuario");
-      }
-    })
-    .catch(err => {
-      console.log(err);
-      alert("Ha ocurrido un error")
-    })
   }
 
 
@@ -217,22 +218,23 @@ class Menu extends React.Component {
               <HomeIcon />
             </IconButton>
           </Link>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
+          {isUserLogged &&
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                placeholder="Buscar"
+                value={textoBuscar}
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+                onChange={this.handleBuscarText}
+                onKeyPress={this.handleBuscarKey}
+              />
             </div>
-            {/* <InputBase */}
-            <InputBase
-              placeholder="Buscar"
-              value={textoBuscar}
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              onChange={this.handleBuscarText}
-              onKeyPress={this.handleBuscarKey}
-            />
-          </div>
+          }
           <div className={classes.grow} />
 
           <LinkMenu route="signup" title="Registro" isUserLogged={isUserLogged} />
