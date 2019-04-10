@@ -12,7 +12,8 @@ const POST =
     descripcion: "",
     correo: "",
     fecha: "",
-    comentarios: []
+    comentarios: [],
+    ubicacion: {}
 }
 
 const COMENTARIO =

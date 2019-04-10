@@ -68,7 +68,14 @@ class Post extends Component {
     
   }
   render() {
-    const { classes, post, updatePosts } = this.props    
+    const { classes, post, updatePosts } = this.props;    
+    let ubicacion = null;
+    console.log("POST: ", post)
+    if(post.ciudad)
+    {      
+      ubicacion = `${post.pais}, ${post.ciudad}`;
+    }
+
     return (
       <Card className={classes.card}>
         <CardHeader
@@ -77,7 +84,14 @@ class Post extends Component {
           }
 
           title={this.props.post.correo}
-          subheader={(new Date(parseInt(this.props.post.fecha))).toDateString()}
+          subheader={
+            <span>
+              {(new Date(parseInt(this.props.post.fecha))).toDateString()}
+              <br/>
+              {ubicacion}
+            </span>
+          }
+
           className={classes.cardHeader}
         />
         <CardContent className={classes.cardContent}>

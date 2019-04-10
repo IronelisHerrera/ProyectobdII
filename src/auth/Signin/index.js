@@ -79,8 +79,8 @@ class Signin extends Component {
           <Typography type="headline" component="h2" className={classes.title}>
             Iniciar sesión
           </Typography>
-          <TextField id="email" type="email" label="Email" className={classes.textField} value={this.state.email} onChange={this.handleChange('email')} margin="normal"/><br/>
-          <TextField id="password" type="password" label="Password" className={classes.textField} value={this.state.password} onChange={this.handleChange('password')} margin="normal"/>
+          <TextField id="email" type="email" label="Correo" className={classes.textField} value={this.state.email} onChange={this.handleChange('email')} margin="normal"/><br/>
+          <TextField id="password" type="password" label="Clave" className={classes.textField} value={this.state.password} onChange={this.handleChange('password')} margin="normal"/>
           <br/> {
             this.state.error && (<Typography component="p" color="error">
               <Icon color="error" className={classes.error}>error</Icon>

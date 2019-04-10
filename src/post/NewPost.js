@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import  { Button, TextField, Card, CardHeader, CardContent, CardActions } from '@material-ui/core'
+import  { Button, TextField, Card, CardHeader, CardContent, CardActions, FormControlLabel, Switch } from '@material-ui/core'
 
 import {withStyles} from '@material-ui/core/styles'
 import { ROUTES } from "../const"
@@ -45,13 +45,34 @@ const styles = theme => ({
   }
 })
 
+const UBICACION = {city: null, country: null, lon: null, lat: null}
+
 class NewPost extends Component {
   state = {
-    texto: ""
+    texto: "",
+    ubicacion: {
+      ...UBICACION
+    },
+    switchUbicacion: false,
   }
 
   componentDidMount = () => {
-    
+    // this.getUbicacion();
+  }
+
+  requestUbicacion = async() =>
+  {
+    const res = await fetch("http://ip-api.com/json");
+    const body = res.json();
+    if(res.status != 200) throw Error(body.message)
+    return body;
+  }
+
+  getUbicacion = () =>
+  {
+    this.requestUbicacion()
+    .then(res => this.setState({ubicacion: res}))
+    .catch(err => console.log(err))
   }
 
   sendPost = () =>
@@ -75,24 +96,37 @@ class NewPost extends Component {
   
   requestSendPost = async() =>
   {
-    const { texto } = this.state;
-    const correo = window.localStorage.getItem("correo");    
-    const res = await fetch(`${ROUTES.POST.NUEVO}?descripcion=${texto}&correo=${correo}&fecha=${+ new Date()}`);
+    const { texto, ubicacion } = this.state;
+    const correo = window.localStorage.getItem("correo");
+    const res = await fetch(`${ROUTES.POST.NUEVO}?descripcion=${texto}&correo=${correo}&fecha=${+ new Date()}&ciudad=${ubicacion.city}&pais=${ubicacion.country}&lat=${ubicacion.lat}&lon=${ubicacion.lon}`);
     const body = res.json()
     if(res.status != 200) throw Error(body.message)
     return body;
   }
 
-  
-
-
   handleChange = event => {
     let value = event.target.value;
     this.setState({texto: value});
   }
+
+  handleChangeSwitch = (event) =>
+  {
+    let { switchUbicacion, ubicacion } = this.state;
+    switchUbicacion = event.target.checked;
+    if(switchUbicacion) {
+      this.getUbicacion();
+    } else
+    {
+      ubicacion = {...UBICACION}
+    }
+    this.setState({switchUbicacion, ubicacion})
+  }
+
+
   render() {
     const {classes} = this.props;
-    const { texto } = this.state;
+    const { texto, ubicacion, switchUbicacion } = this.state;
+    console.log(ubicacion)
     return (<div className={classes.root}>
       <Card className={classes.card}>
       
@@ -109,6 +143,14 @@ class NewPost extends Component {
         
       </CardContent>
       <CardActions>
+        <FormControlLabel 
+          control={
+            <Switch checked={switchUbicacion} onChange={this.handleChangeSwitch} color="primary"/>
+          }
+          label="Compartir ubicación"
+        />
+
+        
         <Button color="primary" variant="raised" disabled={this.state.text === ''} onClick={this.sendPost} className={classes.submit}>POST</Button>
       </CardActions>
     </Card>
