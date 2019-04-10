@@ -185,10 +185,7 @@ class Comments extends Component {
         className={classes.cardHeader}
       />
       {this.props.comentarios.map((item, i) => {
-        return <CardHeader
-          // avatar={
-          //   <Avatar className={classes.smallAvatar} src={'/api/users/photo/'+item.postedBy._id}/>
-          // }
+        return <CardHeader          
           title={commentBody(item)}
           className={classes.cardHeader}
           key={i} />

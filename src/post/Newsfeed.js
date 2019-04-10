@@ -34,7 +34,7 @@ class Newsfeed extends Component {
       return (
         <Card className={classes.card}>
           <Typography type="title" className={classes.title}>
-            Blablabla
+            Nuevo post
           </Typography>
           <Divider />
           <NewPost updatePosts={updatePosts} />

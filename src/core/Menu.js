@@ -210,7 +210,7 @@ class Menu extends React.Component {
       <AppBar position="static">
         <Toolbar>
           <Typography className={classes.title} type="title" color="inherit">
-            BLABLABLA
+            Red social db
           </Typography>
           <Link to="/">
             <IconButton aria-label="Home">
