@@ -4,7 +4,7 @@ import {BrowserRouter} from 'react-router-dom'
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles'
 import {teal, orange} from '@material-ui/core/colors'
 import { hot } from 'react-hot-loader'
-
+import "./styles/styles.css"
 // Create a theme instance.
 const theme = createMuiTheme({
   palette: {

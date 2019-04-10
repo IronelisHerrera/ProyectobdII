@@ -1,8 +1,6 @@
 import React, {Component} from 'react'
-import Card, { CardHeader, CardContent, CardActions } from '@material-ui/core/Card'
-import Button from '@material-ui/core/Button'
-import TextField from '@material-ui/core/TextField'
-import PropTypes from 'prop-types'
+import  { Button, TextField, Card, CardHeader, CardContent, CardActions } from '@material-ui/core'
+
 import {withStyles} from '@material-ui/core/styles'
 import { ROUTES } from "../const"
 
@@ -114,9 +112,7 @@ class NewPost extends Component {
   }
 }
 
-NewPost.propTypes = {
-  classes: PropTypes.object.isRequired,
-  addUpdate: PropTypes.func.isRequired
-}
+
 
 export default withStyles(styles)(NewPost)
+// export default withStyles(styles)(Newsfeed)

@@ -10,7 +10,8 @@ const ROUTES =
     {
         ROOT: "/usuarios",
         NUEVO: "/usuarios/nuevo",
-        BUSCAR: "/usuarios/buscar"
+        BUSCAR: "/usuarios/buscar",
+        SEGUIR: "/usuarios/seguir"
     },
 
     POST: 

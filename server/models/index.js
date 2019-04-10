@@ -2,7 +2,9 @@ const USUARIO  =
 {
     nombres: "",
     correo: "",
-    clave: ""
+    clave: "",
+    seguidores: [],
+    seguidos: []
 }
 
 const POST =

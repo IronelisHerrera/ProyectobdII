@@ -43,6 +43,11 @@ class Signin extends Component {
       redirectToReferrer: false
   }
 
+  componentDidMount()
+  {
+    // this.props.history.push("/home")
+  }
+
   clickSubmit = () => {
     let { email } = this.state;
     this.requestLogin()
@@ -55,6 +60,7 @@ class Signin extends Component {
         //Guardar el usuario logeado en el navegador
         // alert("BLABLABLA")
         this.props.OnChangeStateCorreo(email, () => this.props.history.push("/home") );
+        // this.props.history.push("/home")
         window.localStorage.setItem("correo", email);
         // this.props.history.push("/signin");
       }
@@ -80,6 +86,7 @@ class Signin extends Component {
 
   render() {
     const {classes} = this.props
+    console.log(this.props)
     // const {from} = this.props.location.state || {
     //   from: {
     //     pathname: '/'

@@ -18,12 +18,13 @@ client.connect(function (err) {
     db = client.db(dbName);
 
     const collectionUsuario = db.collection("USUARIOS");
+    // collectionUsuario.remove({});
 
 
     app.get(ROUTES.USUARIO.NUEVO, (req, res) => {
         let AUX = { ...USUARIO };
         AUX = req.query;
-        NUEVO_USUARIO(AUX, db, () => {
+        USUARIOS_NUEVO({...AUX, seguidos: [], seguidores: []}, db, () => {
             res.status(200);
             res.send({ error: false });
         });
@@ -54,6 +55,11 @@ client.connect(function (err) {
             res.status(200);
         })
     });
+    
+    app.get(ROUTES.USUARIO.SEGUIR, (req, res) => {        
+        const { from, to } = req.query;
+        USUARIOS_SEGUIR(from, to, db, (result) => res.send(result));
+    });
 
 
 
@@ -73,12 +79,7 @@ client.connect(function (err) {
 
 
 
-const NUEVO_USUARIO = (object, db, callback) => {
-    const collection = db.collection(COLLECTIONS.USUARIOS);
-    collection.insertOne(object, (err, result) => {
-        callback(result);
-    })
-}
+
 
 const INICIAR_SESION = (object, db, callback) => {
     const collection = db.collection(COLLECTIONS.USUARIOS);
@@ -120,6 +121,13 @@ const POST_ROOT = (usuarioActual ,db, callback) => { //usuarioActual es el corre
     })
 }
 
+const USUARIOS_NUEVO = (object, db, callback) => {
+    const collection = db.collection(COLLECTIONS.USUARIOS);
+    collection.insertOne(object, (err, result) => {
+        callback(result);
+    })
+}
+
 const USUARIOS_BUSCAR = (value, db, callback) =>
 {
     const collection = db.collection(COLLECTIONS.USUARIOS);
@@ -132,6 +140,43 @@ const USUARIOS_BUSCAR = (value, db, callback) =>
             }
         })
         callback(data);
+    })
+}
+
+const USUARIOS_SEGUIR = (usuarioActual, usuarioAseguir, db, callback) =>
+{
+    const collection = db.collection(COLLECTIONS.USUARIOS);
+    let usuario = {}
+    collection.find({correo: usuarioActual}).toArray((err, result) => {
+        if(result.length > 0)
+        {
+            usuario = {...result[0]};
+            //VERIFICAR SI YA SIGUE A ESTE USUARIO
+            let alreadyFollowed = false;
+            let item = null;
+            for(let i = 0; i < usuario.seguidos.length; i ++)
+            {
+                item = usuario.seguidos[i];
+                
+                if(item == usuarioAseguir)
+                {
+                    alreadyFollowed = true;
+                    callback({error: true})
+                    break;
+                }
+            }
+            console.log(alreadyFollowed)
+            if(!alreadyFollowed)
+            {
+                usuario.seguidos.push(usuarioAseguir);
+                collection.updateOne({correo: usuarioActual}, {$set: { seguidos: usuario.seguidos}}, (result) => {
+                    callback({error: false})
+                })
+            } 
+        }
+        
+        // callback(result)
+        
     })
 }
 

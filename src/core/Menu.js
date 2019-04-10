@@ -102,7 +102,7 @@ const LinkMenu = (props) => {
 }
 
 const ModalUsuarios = (props) => {
-  const { data, open, closeModal} = props;
+  const { data, open, closeModal, SeguirUsuario} = props;
   
   return <Dialog open={open} onBackdropClick={closeModal} >
     <DialogTitle>
@@ -113,7 +113,7 @@ const ModalUsuarios = (props) => {
       <List>
         {data.map((item, i) => {
           return (
-            <ListItem button>
+            <ListItem button onClick={() => SeguirUsuario(item)} >
               <ListItemAvatar>
                 <Avatar src={DefaultAvatar}/>
               </ListItemAvatar>
@@ -177,6 +177,32 @@ class Menu extends React.Component {
     })
   }
 
+  requestSeguirUsuario = async (usuarioAseguir) =>
+  {
+    const usuarioActual = window.localStorage.getItem("usuario");
+    const res = await fetch(`${ROUTES.USUARIO.SEGUIR}?from=${usuarioActual}&to=${usuarioAseguir.correo}`)
+    const body = res.json();
+    if(res.status != 200) throw Error(body.message)
+    return body;
+  }
+
+  SeguirUsuario = (usuarioAseguir) =>
+  {
+    this.requestSeguirUsuario(usuarioAseguir)
+    .then(res => {
+      console.log(res);
+      if(!res.error)
+      {
+        alert("Has empezado a seguir este usuario");
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      alert("Ha ocurrido un error")
+    })
+  }
+
+
   render() {
     const { isUserLogged, classes } = this.props;
     const { usuarios, modalOpen, textoBuscar } = this.state;
@@ -211,7 +237,7 @@ class Menu extends React.Component {
 
           <LinkMenu route="signup" title="Registro" isUserLogged={isUserLogged} />
           <LinkMenu route="signin" title="Iniciar sesión" isUserLogged={isUserLogged} />
-          <ModalUsuarios data={usuarios} open={modalOpen} closeModal={this.closeModal} />
+          <ModalUsuarios data={usuarios} open={modalOpen} closeModal={this.closeModal} SeguirUsuario={this.SeguirUsuario} />
         </Toolbar>
       </AppBar>
     )
