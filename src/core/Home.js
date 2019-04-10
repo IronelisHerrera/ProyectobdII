@@ -1,12 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
-import Card, { CardContent, CardMedia } from '@material-ui/core/Card'
-import Typography from '@material-ui/core/Typography'
-import seashellImg from './../assets/images/seashell.jpg'
-import { Link } from 'react-router-dom'
 import Grid from '@material-ui/core/Grid'
-import FindPeople from './../user/FindPeople'
 import Newsfeed from './../post/Newsfeed'
 
 const styles = theme => ({
@@ -46,12 +41,6 @@ class Home extends Component {
             </Grid>
           </Grid>
         </Grid>
-
-
-        {/* <Grid item xs={6} sm={5}>
-              <FindPeople/>
-            </Grid> */}
-
       </div>
     )
   }

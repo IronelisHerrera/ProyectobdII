@@ -1,13 +1,8 @@
 import React, {Component} from 'react'
 import {Card, CardActions, CardContent, Button, TextField, Typography, Icon} from '@material-ui/core'
-// import Button from '@material-ui/core/Button'
-// import TextField from '@material-ui/core/TextField'
-// import Typography from '@material-ui/core/Typography'
-// import Icon from '@material-ui/core/Icon'
 import PropTypes from 'prop-types'
 import {withStyles} from '@material-ui/core/styles'
-import {Redirect} from 'react-router-dom'
-import { ROUTES } from "../const"
+import { ROUTES } from "../../const"
 
 const styles = theme => ({
   card: {
@@ -39,15 +34,9 @@ class Signin extends Component {
   state = {
       email: '',
       password: '',
-      error: '',
-      redirectToReferrer: false
+      error: '',      
   }
-
-  componentDidMount()
-  {
-    // this.props.history.push("/home")
-  }
-
+ 
   clickSubmit = () => {
     let { email } = this.state;
     this.requestLogin()
@@ -58,11 +47,8 @@ class Signin extends Component {
       } else
       {
         //Guardar el usuario logeado en el navegador
-        // alert("BLABLABLA")
         this.props.OnChangeStateCorreo(email, () => this.props.history.push("/home") );
-        // this.props.history.push("/home")
-        window.localStorage.setItem("correo", email);
-        // this.props.history.push("/signin");
+        window.localStorage.setItem("correo", email);        
       }
       console.log(res);
     })
@@ -85,23 +71,13 @@ class Signin extends Component {
   }
 
   render() {
-    const {classes} = this.props
-    console.log(this.props)
-    // const {from} = this.props.location.state || {
-    //   from: {
-    //     pathname: '/'
-    //   }
-    // }
-    // const {redirectToReferrer} = this.state
-    // if (redirectToReferrer) {
-    //   return (<Redirect to={from}/>)
-    // }
+    const {classes} = this.props    
 
     return (
       <Card className={classes.card}>
         <CardContent>
           <Typography type="headline" component="h2" className={classes.title}>
-            Sign In
+            Iniciar sesión
           </Typography>
           <TextField id="email" type="email" label="Email" className={classes.textField} value={this.state.email} onChange={this.handleChange('email')} margin="normal"/><br/>
           <TextField id="password" type="password" label="Password" className={classes.textField} value={this.state.password} onChange={this.handleChange('password')} margin="normal"/>
