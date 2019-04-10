@@ -5,4 +5,11 @@ const USUARIO  =
     clave: ""
 }
 
-module.exports = { USUARIO };
+const POST =
+{
+    descripcion: "",
+    correo: "",
+    fecha: ""
+}
+
+module.exports = { USUARIO, POST };

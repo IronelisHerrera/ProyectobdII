@@ -12,12 +12,18 @@ const ROUTES =
         NUEVO: "/usuarios/nuevo",
     },
 
+    POST: 
+    {
+        ROOT: "/posts",
+        NUEVO: "/posts/nuevo"
+    }
 
 }
 
 const COLLECTIONS =
 {
-    USUARIOS: "USUARIOS"
+    USUARIOS: "USUARIOS",
+    POSTS: "POSTS"
 }
 
 

@@ -45,6 +45,8 @@ class MainRouter extends Component {
         <Route path="/home" component={() => <Home isUserLogged={isUserLogged} />}/>
         <Route path="/signin" component={(props) => <Signin {...props} OnChangeStateCorreo={this.OnChangeStateCorreo} /> }/>
       </Switch>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"/>
+
     </div>)
   }
 }

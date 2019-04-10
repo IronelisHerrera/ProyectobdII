@@ -1,16 +1,10 @@
 import React, {Component} from 'react'
-import Card, { CardHeader, CardContent, CardActions } from 'material-ui/Card'
-import Button from 'material-ui/Button'
-import TextField from 'material-ui/TextField'
-import Typography from 'material-ui/Typography'
-import Avatar from 'material-ui/Avatar'
-import Icon from 'material-ui/Icon'
+import Card, { CardHeader, CardContent, CardActions } from '@material-ui/core/Card'
+import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField'
 import PropTypes from 'prop-types'
-import {withStyles} from 'material-ui/styles'
-import {create} from './api-post.js'
-import auth from './../auth/auth-helper'
-import IconButton from 'material-ui/IconButton'
-import PhotoCamera from 'material-ui-icons/PhotoCamera'
+import {withStyles} from '@material-ui/core/styles'
+import { ROUTES } from "../const"
 
 const styles = theme => ({
   root: {
@@ -61,9 +55,35 @@ class NewPost extends Component {
   componentDidMount = () => {
     
   }
-  clickPost = () => {
-    
+
+  sendPost = () =>
+  {
+    this.requestSendPost()
+    .then(res => {
+      if(!res.ok)
+      {
+        alert("Ha ocurrido un error haciendo el post");
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      alert("Ha ocurrido un error haciendo el post");
+    })
   }
+  
+  requestSendPost = async() =>
+  {
+    const { texto } = this.state;
+    const correo = window.localStorage.getItem("correo");
+    // descripcion: "",
+    // correo: ""
+    const res = await fetch(`${ROUTES.POST.NUEVO}?descripcion=${texto}&correo=${correo}&fecha=${+ new Date()}`);
+    const body = res.json()
+    if(res.status != 200) throw Error(body.message)
+    return body;
+  }
+
+
   handleChange = event => {
     let value = event.target.value;
     this.setState({texto: value});
@@ -87,7 +107,7 @@ class NewPost extends Component {
         
       </CardContent>
       <CardActions>
-        <Button color="primary" variant="raised" disabled={this.state.text === ''} onClick={this.clickPost} className={classes.submit}>POST</Button>
+        <Button color="primary" variant="raised" disabled={this.state.text === ''} onClick={this.sendPost} className={classes.submit}>POST</Button>
       </CardActions>
     </Card>
   </div>)

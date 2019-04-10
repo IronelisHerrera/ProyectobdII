@@ -1,12 +1,12 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import {withStyles} from 'material-ui/styles'
-import List, {ListItem, ListItemAvatar, ListItemIcon, ListItemSecondaryAction, ListItemText} from 'material-ui/List'
-import Avatar from 'material-ui/Avatar'
-import Button from 'material-ui/Button'
-import Typography from 'material-ui/Typography'
+import {withStyles} from '@material-ui/core/styles'
+import List, {ListItem, ListItemAvatar, ListItemIcon, ListItemSecondaryAction, ListItemText} from '@material-ui/core/List'
+import Avatar from '@material-ui/core/Avatar'
+import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
 import {Link} from 'react-router-dom'
-import GridList, { GridListTile } from 'material-ui/GridList'
+import GridList, { GridListTile } from '@material-ui/core/GridList'
 
 const styles = theme => ({
   root: {

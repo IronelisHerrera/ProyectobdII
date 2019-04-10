@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
-import Card, {CardActions, CardContent} from 'material-ui/Card'
-import Button from 'material-ui/Button'
-import TextField from 'material-ui/TextField'
-import Typography from 'material-ui/Typography'
-import Icon from 'material-ui/Icon'
+import {Card, CardActions, CardContent, Button, TextField, Typography, Icon} from '@material-ui/core'
+// import Button from '@material-ui/core/Button'
+// import TextField from '@material-ui/core/TextField'
+// import Typography from '@material-ui/core/Typography'
+// import Icon from '@material-ui/core/Icon'
 import PropTypes from 'prop-types'
-import {withStyles} from 'material-ui/styles'
+import {withStyles} from '@material-ui/core/styles'
 import {Redirect} from 'react-router-dom'
 import { ROUTES } from "../const"
 
@@ -54,7 +54,8 @@ class Signin extends Component {
       {
         //Guardar el usuario logeado en el navegador
         // alert("BLABLABLA")
-        this.props.OnChangeStateCorreo(email, () => this.props.history.push("/home") );        
+        this.props.OnChangeStateCorreo(email, () => this.props.history.push("/home") );
+        window.localStorage.setItem("correo", email);
         // this.props.history.push("/signin");
       }
       console.log(res);

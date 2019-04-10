@@ -1,8 +1,8 @@
 import React from 'react'
 import MainRouter from './MainRouter'
 import {BrowserRouter} from 'react-router-dom'
-import {MuiThemeProvider, createMuiTheme} from 'material-ui/styles'
-import {teal, orange} from 'material-ui/colors'
+import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles'
+import {teal, orange} from '@material-ui/core/colors'
 import { hot } from 'react-hot-loader'
 
 // Create a theme instance.

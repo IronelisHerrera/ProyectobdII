@@ -10,7 +10,7 @@ const port = process.env.port || 5000;
 
 let db = null;
 
-const { USUARIO } = require("./models")
+const { USUARIO, POST } = require("./models")
 const { ROUTES, COLLECTIONS } = require("./const");
 
 client.connect(function (err) {
@@ -31,18 +31,31 @@ client.connect(function (err) {
 
     app.get(ROUTES.SESION.LOGIN, (req, res) => {
         const USUARIO = req.query;
-        console.log("USUARIO: ", USUARIO)
         INICIAR_SESION(USUARIO, db, (result) => {
             res.send(result);
         })
 
     })
 
+    app.get(ROUTES.POST.NUEVO, (req, res) => {
+        let AUX = {...POST};
+        AUX = req.query;
+        POST_NUEVO(AUX, db, result => res.send(result));
+    });
+    
+    app.get(ROUTES.POST.ROOT, (req, res) => {        
+        POST_ROOT(db, (result) => res.send(result));
+    });
+
+
+
     app.get("/", (req, res) => {
         collectionUsuario.find({}).toArray((err, result) => {
             res.send(result);
         })
     })
+
+    // collectionUsuario.find
 
 
 });
@@ -54,8 +67,6 @@ client.connect(function (err) {
 const NUEVO_USUARIO = (object, db, callback) => {
     const collection = db.collection(COLLECTIONS.USUARIOS);
     collection.insertOne(object, (err, result) => {
-        assert.equal(err, null);
-
         callback(result);
     })
 }
@@ -67,6 +78,39 @@ const INICIAR_SESION = (object, db, callback) => {
     })
 }
 
+const POST_NUEVO = (object, db, callback) => {
+    const collection = db.collection(COLLECTIONS.POSTS);
+    collection.insertOne(object, (err, result) => {
+        callback(result);
+    })
+}
+
+const POST_ROOT = (usuarioActual ,db, callback) => { //usuarioActual es el correo
+    const collection_posts = db.collection(COLLECTIONS.POSTS);
+    const collection_seguidos = db.collection(COLLECTIONS.SEGUIDOS);
+    let arr = []; 
+    let mis_amigos = [];
+    //OBTENIENDO LOS POST DE MI USUARIO
+    collection_posts.find({correo: usuarioActual}).toArray((err, result) => {
+        arr = [...result];
+        //OBTENIENDO LA GENTE QUE SIGO
+        collection_seguidos.find({usuario: usuarioActual}).toArray((err, result) => {
+            mis_amigos = [...result];
+            mis_amigos.forEach(item => {
+                collection_posts.find(item).toArray((err, result) => {
+                    arr = [...result];
+                });
+            })
+            console.log(arr);
+            callback(arr);
+        })
+
+
+    })
+    collection.find({}).toArray((err, result) => {
+        callback(result);
+    })
+}
 
 
 
