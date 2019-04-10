@@ -11,7 +11,16 @@ const POST =
 {
     descripcion: "",
     correo: "",
-    fecha: ""
+    fecha: "",
+    comentarios: []
 }
 
-module.exports = { USUARIO, POST };
+const COMENTARIO =
+{
+    _id: "", //ID DEL POST
+    usuario:"",
+    comentario:"",
+    comentarios: []
+}
+
+module.exports = { USUARIO, POST, COMENTARIO };

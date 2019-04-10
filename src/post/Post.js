@@ -121,7 +121,7 @@ class Post extends Component {
           </IconButton> <span>{this.state.comments.length}</span>
         </CardActions> */}
         <Divider />
-        <Comments postId={this.props.post._id} comments={this.props.post.comentarios}  />
+        <Comments comentarios={this.props.post.comentarios}  />
       </Card>
     )
   }

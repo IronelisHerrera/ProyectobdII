@@ -13,7 +13,7 @@ const port = process.env.port || 5000;
 let db = null;
 let arr = [];
 
-const { USUARIO, POST } = require("./models")
+const { USUARIO, POST, COMENTARIO } = require("./models")
 const { ROUTES, COLLECTIONS } = require("./const");
 
 client.connect(function (err) {
@@ -23,7 +23,7 @@ client.connect(function (err) {
     const collectionUsuario = db.collection("USUARIOS");
     const collectionPOST = db.collection("POSTS");
     // collectionUsuario.remove({});
-    collectionPOST.remove({});
+    // collectionPOST.remove({});
 
 
     app.get(ROUTES.USUARIO.NUEVO, (req, res) => {
@@ -46,7 +46,7 @@ client.connect(function (err) {
     app.get(ROUTES.POST.NUEVO, (req, res) => {
         let AUX = { ...POST };
         AUX = req.query;
-        POST_NUEVO({...AUX, comentarios: []}, db, result => res.send(result));
+        POST_NUEVO({ ...AUX, comentarios: [] }, db, result => res.send(result));
     });
 
     app.get(ROUTES.POST.ROOT, (req, res) => {
@@ -61,14 +61,20 @@ client.connect(function (err) {
             collection_usuarios.find({ correo: usuarioActual }).toArray((err, result) => {
                 // console.log(result[0].seguidos)
                 mis_amigos = [...result[0].seguidos];
-                mis_amigos.forEach((item, i) => {
-                    collection_posts.find({ correo: item }).toArray((err, result) => {
-                        AddPosts(result);
-                        if (i == mis_amigos.length - 1) {
-                            res.send(arr)
-                        }
-                    });
-                })
+                if(result[0].seguidos.length != 0)
+                {
+                    mis_amigos.forEach((item, i) => {
+                        collection_posts.find({ correo: item }).toArray((err, result) => {
+                            AddPosts(result);
+                            if (i == mis_amigos.length - 1) {
+                                res.send(arr)
+                            }
+                        });
+                    })
+                } else
+                {
+                    res.send(arr)
+                }
             })
         })
     });
@@ -86,9 +92,12 @@ client.connect(function (err) {
         USUARIOS_SEGUIR(from, to, db, (result) => res.send(result));
     });
 
-    app.get(ROUTES.POST.USUARIO, (req, res) => {
-        const { usuario } = req.query;
-        POST_USUARIO(usuario, db, (result) => res.send(result));
+    app.get(ROUTES.POST.COMENTAR, (req, res) => {
+        let AUX = {...COMENTARIO}
+        AUX = req.query;        
+        POST_COMENTAR(AUX, db, result => {
+            res.send(result)
+        })
     });
 
 
@@ -101,11 +110,13 @@ client.connect(function (err) {
     })
 
     // collectionUsuario.find
-    const mongo_id = new mongo.ObjectID("5cad9e028e668e4efe99abb1")
-    collectionPOST.find({"_id": mongo_id}).toArray((err, result) => console.log(result))
+    
+    // collectionPOST.
     // collectionPOST.findOne({"_id": mongo_id}, (err, result) => {
     //     console.log(result)
     // })
+    // const mongo_id = new mongo.ObjectID("5cae00359137cb5124c3694a")
+    // collectionPOST.update({ "_id": mongo_id }).toArray((err, result) => console.log(result))
 
 });
 
@@ -132,7 +143,15 @@ const POST_NUEVO = (object, db, callback) => {
 
 const POST_COMENTAR = (object, db, callback) => {
     const collection = db.collection(COLLECTIONS.POSTS);
-    
+    const mongo_id = new mongo.ObjectID(object._id)
+    collection.find({ "_id": mongo_id }).toArray((err, result) => {
+        let comentarios = result[0].comentarios;
+        comentarios.push({usuario: object.usuario, comentario: object.comentario, comentarios: []});
+        collection.updateOne({"_id": mongo_id}, {$set: {comentarios: comentarios}}, (result) => {
+            callback({...result, error: false})
+        })
+    })
+
 }
 
 
