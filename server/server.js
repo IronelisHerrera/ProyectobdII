@@ -46,6 +46,15 @@ client.connect(function (err) {
     app.get(ROUTES.POST.ROOT, (req, res) => {        
         POST_ROOT(db, (result) => res.send(result));
     });
+    
+    app.get(ROUTES.USUARIO.BUSCAR, (req, res) => {        
+        const { value } = req.query;
+        USUARIOS_BUSCAR(value, db, (result) => {
+            res.send(result);
+            res.status(200);
+        })
+    });
+
 
 
 
@@ -105,10 +114,24 @@ const POST_ROOT = (usuarioActual ,db, callback) => { //usuarioActual es el corre
             callback(arr);
         })
 
-
     })
     collection.find({}).toArray((err, result) => {
         callback(result);
+    })
+}
+
+const USUARIOS_BUSCAR = (value, db, callback) =>
+{
+    const collection = db.collection(COLLECTIONS.USUARIOS);
+    let data = []
+    collection.find({}).toArray((err, result) => {
+        result.forEach(item => {
+            if(item.nombres.startsWith(value))
+            {
+                data.push(item);
+            }
+        })
+        callback(data);
     })
 }
 
